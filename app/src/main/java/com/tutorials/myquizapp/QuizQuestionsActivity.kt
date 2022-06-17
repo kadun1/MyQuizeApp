@@ -60,6 +60,7 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
     private fun setQuestion() {
 
         defaultOptionsView()
+        // 느낌표 두개(!!)는 절대 null이 들어오면 안되는 경우에 기입
         val question: Question = mQuestionsList!![mCurrentPosition - 1]
         ivImage?.setImageResource(question.image)
         progressBar?.progress = mCurrentPosition
@@ -77,8 +78,13 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    //각 선택지들을 디폴트값으로 수정해준다
     private fun defaultOptionsView() {
         val options = ArrayList<TextView>()
+        /** let은 지정된 값이 null이 아닌 경우에 코드를 실행해야 할 때 사용
+         *  Nullable 객체를 다른 Nullable 객체로 변환하는 경우
+         *  단일 지역 변수의 범위를 제한 하는 경우.
+         */
         tvOptionOne?.let {
             options.add(0, it)
         }
@@ -145,10 +151,12 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                     mCurrentPosition++
 
                     when {
+                        //퀴즈수보다 작거나 같을때
                         mCurrentPosition <= mQuestionsList!!.size -> {
                             setQuestion()
                         }
                         else -> {
+                            //마지막 문항을 마치면 결과액티비티로
 //                            Toast.makeText(this, "You Made it to the end", Toast.LENGTH_LONG).show()
                             val intent = Intent(this, ResultActivity::class.java)
                             intent.putExtra(Constants.USER_NAME, mUserName)
@@ -179,6 +187,7 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    //정답 또는 오답을 선택했을때 UI 표현
     private fun answerView(answer: Int, drawableView: Int) {
         when (answer) {
             1 -> {
